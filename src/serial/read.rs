@@ -1,5 +1,3 @@
-use core::marker::PhantomData;
-use embedded_hal::serial as hal;
 use taskio::Poll;
 
 pub trait Read<W> {

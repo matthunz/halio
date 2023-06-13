@@ -3,6 +3,9 @@ name = "halio"
 version = "0.1.0"
 edition = "2021"
 
+[features]
+full = ["embedded-hal"]
+
 [dependencies]
-embedded-hal = "0.2.7"
+embedded-hal = { version = "0.2.7", optional = true }
 taskio = { path = "../taskio", features = ["full"] }
