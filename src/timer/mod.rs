@@ -1,10 +1,14 @@
 use core::pin::Pin;
+use embedded_hal::timer::Periodic;
 use taskio::Poll;
 
 #[cfg(feature = "embedded-hal")]
 mod from_hal;
 #[cfg(feature = "embedded-hal")]
 pub use from_hal::{from_hal, FromHal};
+
+mod interval;
+pub use interval::Interval;
 
 mod wait;
 pub use wait::Wait;
@@ -41,6 +45,14 @@ pub trait CountDown {
         T: Into<Self::Time>,
     {
         Wait::new(self, count)
+    }
+
+    fn interval<T>(self, count: T) -> Interval<Self, T>
+    where
+        Self: Sized + Periodic + Unpin,
+        T: Into<Self::Time>,
+    {
+        Interval::new(self, count)
     }
 }
 
