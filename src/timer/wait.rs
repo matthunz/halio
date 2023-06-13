@@ -1,18 +1,19 @@
-use core::pin::Pin;
-use taskio::{Task, Poll};
 use super::CountDown;
-
+use core::pin::Pin;
+use taskio::{Poll, Task};
 
 pub struct Wait<C, T> {
     count_down: C,
     count: Option<T>,
 }
 
-impl<C, T>  Wait<C, T> {
-    pub const fn new( count_down: C,
-        count: T) -> Self {
-            Self { count_down, count: Some(count) }
+impl<C, T> Wait<C, T> {
+    pub const fn new(count_down: C, count: T) -> Self {
+        Self {
+            count_down,
+            count: Some(count),
         }
+    }
 }
 
 impl<C, T> Task for Wait<C, T>

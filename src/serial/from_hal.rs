@@ -1,5 +1,5 @@
 use super::{Read, Write};
-use core::marker::PhantomData;
+use core::{marker::PhantomData, pin::Pin};
 use embedded_hal::serial as hal;
 use taskio::Poll;
 
@@ -15,13 +15,15 @@ pub struct FromHal<T, W> {
     _marker: PhantomData<W>,
 }
 
+impl<T: Unpin, W> Unpin for FromHal<T, W> {}
+
 impl<W, T> Read<W> for FromHal<T, W>
 where
-    T: hal::Read<W>,
+    T: hal::Read<W> + Unpin,
 {
     type Error = T::Error;
 
-    fn read(&mut self) -> Poll<Result<W, Self::Error>> {
+    fn poll_read(mut self: Pin<&mut Self>) -> Poll<Result<W, Self::Error>> {
         self.hal.read().into()
     }
 }
