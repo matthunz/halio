@@ -1,6 +1,7 @@
 use core::pin::Pin;
-use embedded_hal::timer::Periodic;
 use taskio::Poll;
+
+pub use embedded_hal::timer::Periodic;
 
 #[cfg(feature = "embedded-hal")]
 mod from_hal;
