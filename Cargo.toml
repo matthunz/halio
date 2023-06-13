@@ -8,4 +8,6 @@ full = ["embedded-hal"]
 
 [dependencies]
 embedded-hal = { version = "0.2.7", optional = true }
+nb = { version = "1.1.0", optional = true }
+pin-project-lite = "0.2.9"
 taskio = { path = "../taskio", features = ["full"] }

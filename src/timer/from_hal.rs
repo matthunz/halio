@@ -1,4 +1,5 @@
 use super::CountDown;
+use core::pin::Pin;
 use embedded_hal::timer as hal;
 use taskio::Poll;
 
@@ -12,7 +13,7 @@ pub struct FromHal<C> {
 
 impl<C> CountDown for FromHal<C>
 where
-    C: hal::CountDown,
+    C: hal::CountDown + Unpin,
 {
     type Time = C::Time;
 
@@ -23,7 +24,11 @@ where
         self.hal.start(count)
     }
 
-    fn wait(&mut self) -> Poll<Result<(), std::convert::Infallible>> {
-        self.hal.wait().map_err(|_| unreachable!()).into()
+    fn poll_wait(mut self: Pin<&mut Self>) -> Poll<()> {
+        match self.hal.wait() {
+            Ok(()) => Poll::Ready(()),
+            Err(nb::Error::Other(_void)) => unreachable!(),
+            Err(nb::Error::WouldBlock) => Poll::Pending,
+        }
     }
 }
